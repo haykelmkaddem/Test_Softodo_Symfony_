@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Project{% endblock %}
+
+{% block body %}
+<section class="container">
+<div class="row">
+<div class="col-5">
+<h1>Create new Project</h1>
+
+    {{ include('projects/_form.html.twig') }}
+
+    <a href="{{ path('app_projects_index') }}" class="btn btn-info">back to list</a>
+</div>
+</div>
+</section>
+    
+{% endblock %}

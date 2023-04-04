@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Project index{% endblock %}
+
+
+
+{% block body %}
+<div class="">
+    <div class="ml-5">
+        <a href="{{ path('app_projects_new') }}" class="btn btn-success w-15 ml-5">New Project</a>
+    </div>
+{{ form_start(form) }}
+<div class="d-flex justify-content-between align-items-center justify-content-between">
+<div class="m-3" style="width: 25%">
+  {{ form_row (form.projectName)}}
+</div>
+<div class="m-3" style="width: 25%">
+  {{ form_row (form.projectStatus)}}
+</div>
+<div class="m-3" style="width: 50%">
+  {{ form_row (form.filenameOrUrl)}}
+</div>
+<button class="btn bg-dark text-light">
+<i class="fas fa-filter"></i>
+</button>
+</div>
+{{ form_end(form) }}
+</div>
+    <div class="row">
+        {% for project in pagination %}
+            {% set difference = date(project.updatedAt|date('Y/m/d')).diff(date('now'|date('Y/m/d'))) %}
+            {% set leftDays = difference.days %}
+        <div class="col-md-3 ">
+            <div class="card m-3" style="height: 380px;display: inline-block; overflow: hidden;">
+              <img class="card-img-top" style="height: 150px" src={{ asset('uploads/projects/' ~ project.image) }} alt="Card image cap">
+                  <div class="card-body">
+                      <h5 class="card-title">{{ project.title }}</h5>
+                      <p class="card-text" style="overflow:hidden; max-height:75px">{{ project.description|slice(0, 100) }}...</p>
+                      <div class="w-100" style="display: flex; justify-content: space-between">
+                          <a href="{{ path('app_projects_show', {'id': project.id}) }}" class="btn btn-primary" style="width: 47%"><i class="fa fa-eye" aria-hidden="true"></i> show</a>
+                          {% if is_granted('ROLE_ADMIN') %}
+                              <a href="{{ path('app_projects_edit', {'id': project.id}) }}" class="btn btn-warning" style="width: 47%"><i class="fas fa-edit" style="color: #231c5f;"></i> Edit</a>
+                          {% endif %}
+
+                      </div>
+                      <div class="w-100 mt-3" style="display: flex; justify-content: space-between">
+                          <span style="font-size: 14px;">Last updated {{ leftDays }} days ago</span>
+                          <span style="font-size: 14px;">{{ project.numberoftasks }} Tasks</span>
+                      </div>
+                  </div>
+            </div>
+        </div>
+            
+        {% else %}
+                <span colspan="8">no records found</span>
+        {% endfor %}
+        <div class="pagination" style="display: flex; justify-content: center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+    </div>
+
+{% endblock %}
